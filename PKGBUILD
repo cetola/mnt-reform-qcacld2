@@ -10,6 +10,7 @@ url="https://github.com/cetola/mnt-build"
 license=('GPL2')
 depends=("linux-mnt-reform=${pkgver}-${pkgrel}")
 backup=('etc/modprobe.d/reform-qcacld2.conf')
+install="${pkgname}.install"
 source=(
   "wlan-${pkgver}-${pkgrel}-mnt.tar.gz::https://github.com/cetola/mnt-build/releases/download/${pkgver}-${pkgrel}-mnt-reform/wlan-${pkgver}-${pkgrel}-mnt.tar.gz"
 )
