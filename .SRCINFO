@@ -1,0 +1,17 @@
+pkgbase = mnt-reform-qcacld2
+	pkgdesc = MNT Reform qcacld2 WLAN kernel module + firmware (arm64)
+	pkgver = 6.18.13
+	pkgrel = 1
+	url = https://github.com/cetola/mnt-build
+	install = mnt-reform-qcacld2.install
+	arch = aarch64
+	license = GPL2
+	depends = linux-mnt-reform=6.18.13-1
+	options = !strip
+	options = !docs
+	options = !emptydirs
+	backup = etc/modprobe.d/reform-qcacld2.conf
+	source = wlan-6.18.13-1-mnt.tar.gz::https://github.com/cetola/mnt-build/releases/download/6.18.13-1-mnt-reform/wlan-6.18.13-1-mnt.tar.gz
+	sha256sums = c3be9a93c4ce739d1dfe33395fe44954b7e560474bf09bb751de96494897d5c0
+
+pkgname = mnt-reform-qcacld2
