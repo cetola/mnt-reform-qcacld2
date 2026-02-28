@@ -1,7 +1,7 @@
 # Maintainer: Stephano Cetola <stephanoc@gmail.com>
 
 pkgname=mnt-reform-qcacld2
-pkgver=6.18.13
+pkgver=6.18.15
 pkgrel=1
 _kernver="${pkgver}-mnt-reform"
 pkgdesc="MNT Reform qcacld2 WLAN kernel module + firmware (arm64)"
@@ -14,7 +14,7 @@ install="${pkgname}.install"
 source=(
   "wlan-${pkgver}-${pkgrel}-mnt.tar.gz::https://github.com/cetola/mnt-build/releases/download/${pkgver}-${pkgrel}-mnt-reform/wlan-${pkgver}-${pkgrel}-mnt.tar.gz"
 )
-sha256sums=('c3be9a93c4ce739d1dfe33395fe44954b7e560474bf09bb751de96494897d5c0')
+sha256sums=('1576a1213d033efa1771cf3423eae7eae4192735c3469030b5244172d30ea435')
 
 options=(!strip !docs !emptydirs)
 
