@@ -51,7 +51,6 @@ MAKE[0]="make -C /lib/modules/\${kernelver}/build M=\${dkms_tree}/\${PACKAGE_NAM
   CONFIG_QCA_WIFI_ISOC=0 CONFIG_QCA_WIFI_2_0=1 CONFIG_QCA_CLD_WLAN=m WLAN_OPEN_SOURCE=1 \
   CONFIG_CLD_HL_SDIO_CORE=y CONFIG_FORCE_MLO_SUPPORT=y"
 
-CLEAN="make -C /lib/modules/\${kernelver}/build M=\${dkms_tree}/\${PACKAGE_NAME}/\${PACKAGE_VERSION}/build clean"
 AUTOINSTALL="yes"
 BUILD_EXCLUSIVE_CONFIG="CONFIG_WIRELESS"
 EOF_DKMS
