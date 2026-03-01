@@ -1,28 +1,68 @@
 # Maintainer: Stephano Cetola <stephanoc@gmail.com>
+# SPDX-License-Identifier: MIT
 
-pkgname=mnt-reform-qcacld2
-pkgver=6.18.15
-pkgrel=1
-_kernver="${pkgver}-mnt-reform"
-pkgdesc="MNT Reform qcacld2 WLAN kernel module + firmware (arm64)"
-arch=('aarch64')
-url="https://github.com/cetola/mnt-build"
-license=('GPL2')
-depends=("linux-mnt-reform=${pkgver}-${pkgrel}")
-backup=('etc/modprobe.d/reform-qcacld2.conf')
-install="${pkgname}.install"
-source=(
-  "wlan-${pkgver}-${pkgrel}-mnt.tar.gz::https://github.com/cetola/mnt-build/releases/download/${pkgver}-${pkgrel}-mnt-reform/wlan-${pkgver}-${pkgrel}-mnt.tar.gz"
+pkgbase=mnt-reform-qcacld
+pkgname=(
+  mnt-reform-qcacld-dkms
+  mnt-reform-qcacld-firmware
 )
-sha256sums=('1576a1213d033efa1771cf3423eae7eae4192735c3469030b5244172d30ea435')
 
+_qcacld2_commit=277339b9beada2ee760236ba2457e84d2b83c404
+_qcacld2_short=${_qcacld2_commit:0:8}
+
+pkgver=20251018.${_qcacld2_short}
+pkgrel=1
+
+arch=('aarch64')
+url="https://source.mnt.re/reform/qcacld2"
+license=('custom:varies')
+makedepends=('git')
 options=(!strip !docs !emptydirs)
 
-package() {
-  cd "$srcdir"
+source=(
+  "qcacld2::git+https://source.mnt.re/reform/qcacld2.git#commit=${_qcacld2_commit}"
+)
+sha256sums=('SKIP')
 
-  install -Dm644 wlan.ko \
-    "$pkgdir/usr/lib/modules/${_kernver}/extra/wlan.ko"
+package_mnt-reform-qcacld-dkms() {
+  pkgdesc="DKMS source for the MNT Reform qcacld2 Wi-Fi driver (pinned ${_qcacld2_short})"
+  depends=('dkms' 'linux-mnt-reform' 'linux-mnt-reform-headers')
+  provides=('mnt-reform-qcacld')
+  conflicts=('mnt-reform-qcacld')
+
+  local _dkmsname="mnt-reform-qcacld"
+  local _srcroot="${pkgdir}/usr/src/${_dkmsname}-${pkgver}"
+
+  install -d "${_srcroot}"
+  cp -a "${srcdir}/qcacld2/." "${_srcroot}/"
+  rm -rf "${_srcroot}/.git"
+
+  cat > "${_srcroot}/dkms.conf" <<EOF_DKMS
+PACKAGE_NAME="${_dkmsname}"
+PACKAGE_VERSION="${pkgver}"
+
+BUILT_MODULE_NAME[0]="wlan"
+BUILT_MODULE_LOCATION[0]="."
+DEST_MODULE_LOCATION[0]="/kernel/drivers/net/wireless"
+
+MAKE[0]="make -C /lib/modules/\${kernelver}/build M=\${dkms_tree}/\${PACKAGE_NAME}/\${PACKAGE_VERSION}/build modules \
+  WLAN_ROOT=\${dkms_tree}/\${PACKAGE_NAME}/\${PACKAGE_VERSION}/build \
+  MODNAME=wlan \
+  CONFIG_QCA_WIFI_ISOC=0 CONFIG_QCA_WIFI_2_0=1 CONFIG_QCA_CLD_WLAN=m WLAN_OPEN_SOURCE=1 \
+  CONFIG_CLD_HL_SDIO_CORE=y CONFIG_FORCE_MLO_SUPPORT=y"
+
+CLEAN="make -C /lib/modules/\${kernelver}/build M=\${dkms_tree}/\${PACKAGE_NAME}/\${PACKAGE_VERSION}/build clean"
+AUTOINSTALL="yes"
+BUILD_EXCLUSIVE_CONFIG="CONFIG_WIRELESS"
+EOF_DKMS
+}
+
+package_mnt-reform-qcacld-firmware() {
+  pkgdesc="Firmware/config + modprobe configuration for MNT Reform qcacld2 Wi-Fi (from pinned repo)"
+  depends=()
+  backup=('etc/modprobe.d/reform-qcacld2.conf')
+
+  cd "${srcdir}/qcacld2/debian-meta"
 
   install -dm755 "$pkgdir/usr/lib/firmware/qcacld2"
   install -Dm644 usr/lib/firmware/qcacld2/* \
@@ -38,6 +78,7 @@ package() {
     "$pkgdir/usr/lib/firmware/wlan/qcacld2/"
   # Also install to the directory where the driver looks
   # Not sure why this happens on Arch and not Debian
+  install -dm755 "$pkgdir/usr/lib/firmware/wlan"
   install -Dm644 usr/lib/firmware/wlan/qcacld2/* \
     "$pkgdir/usr/lib/firmware/wlan/"
 
