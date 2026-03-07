@@ -14,8 +14,6 @@ pkgbase = mnt-reform-qcacld
 pkgname = mnt-reform-qcacld-dkms
 	pkgdesc = DKMS source for the MNT Reform qcacld2 Wi-Fi driver (pinned 277339b9)
 	depends = dkms
-	depends = linux-mnt-reform
-	depends = linux-mnt-reform-headers
 	provides = mnt-reform-qcacld
 	conflicts = mnt-reform-qcacld
 

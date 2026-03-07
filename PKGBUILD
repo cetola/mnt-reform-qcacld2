@@ -26,7 +26,7 @@ sha256sums=('SKIP')
 
 package_mnt-reform-qcacld-dkms() {
   pkgdesc="DKMS source for the MNT Reform qcacld2 Wi-Fi driver (pinned ${_qcacld2_short})"
-  depends=('dkms' 'linux-mnt-reform' 'linux-mnt-reform-headers')
+  depends=('dkms')
   provides=('mnt-reform-qcacld')
   conflicts=('mnt-reform-qcacld')
 
